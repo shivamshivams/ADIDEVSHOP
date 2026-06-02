@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADIDEV GARMENTS | Admin Control Panel Ecosystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="app-loader" class="loader-container">
+        <div class="spinner"></div>
+        <h2 class="brand-logo-text">ADIDEV GARMENTS</h2>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <div id="app-wrapper">
+
+        <div id="user-layout" class="app-layout hidden">
+            <header class="app-header">
+                <div class="header-top">
+                    <span class="brand-title">ADIDEV GARMENTS</span>
+                    <div class="header-actions">
+                        <button id="search-toggle-btn" class="icon-btn"><span class="material-icons-round">search</span></button>
+                        <button id="logout-btn" class="icon-btn"><span class="material-icons-round">logout</span></button>
+                    </div>
+                </div>
+                <div id="search-expandable" class="search-bar-container hidden">
+                    <input type="text" id="global-search-input" placeholder="Search premium items...">
+                </div>
+            </header>
+
+            <main class="main-content">
+                <section id="view-home" class="app-view">
+                    <div class="hero-slider">
+                        <div class="slide active" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80')">
+                            <div class="slide-content">
+                                <span class="badge">New Arrivals</span>
+                                <h2>Premium Essentials</h2>
+                                <p>Refined local fits designed for high performance.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-container">
+                        <h3 class="section-title">Categories</h3>
+                        <div class="category-scroll" id="category-list-container">
+                            <div class="category-pill active" data-category="all">All Clothing</div>
+                            <div class="category-pill" data-category="Shirts">Shirts</div>
+                            <div class="category-pill" data-category="Jeans">Jeans</div>
+                            <div class="category-pill" data-category="Jackets">Jackets</div>
+                            <div class="category-pill" data-category="Hoodies">Hoodies</div>
+                        </div>
+                    </div>
+
+                    <div class="section-container">
+                        <h3 class="section-title">Trending Now</h3>
+                        <div class="product-grid" id="home-product-grid"></div>
+                    </div>
+                </section>
+
+                <section id="view-categories" class="app-view hidden">
+                    <div class="section-container">
+                        <h3 class="section-title">Explore Catalog</h3>
+                        <div class="filter-wrapper">
+                            <select id="filter-sort-select">
+                                <option value="default">Sort by Default</option>
+                                <option value="low-high">Price: Low to High</option>
+                                <option value="high-low">Price: High to Low</option>
+                            </select>
+                        </div>
+                        <div class="product-grid" id="explore-product-grid"></div>
+                    </div>
+                </section>
+
+                <section id="view-product-detail" class="app-view hidden">
+                    <button class="back-nav-btn" onclick="document.dispatchEvent(new CustomEvent('navToHome'))">
+                        <span class="material-icons-round">arrow_back</span> Back to Collection
+                    </button>
+                    <div id="product-detail-render" class="detail-container"></div>
+                </section>
+
+                <section id="view-cart" class="app-view hidden">
+                    <div class="section-container">
+                        <h3 class="section-title">Shopping Bag</h3>
+                        <div id="cart-items-container"></div>
+                        <div id="cart-summary-card" class="summary-card hidden">
+                            <div class="summary-row"><span>Subtotal</span><span id="cart-subtotal">$0.00</span></div>
+                            <div class="summary-row"><span>Delivery</span><span class="free-text">FREE</span></div>
+                            <hr>
+                            <div class="summary-row total"><span>Total</span><span id="cart-total">$0.00</span></div>
+                            <button id="checkout-proc-btn" class="btn btn-primary btn-block">Confirm & Place Order</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-wishlist" class="app-view hidden">
+                    <div class="section-container">
+                        <h3 class="section-title">Saved Items</h3>
+                        <div class="product-grid" id="wishlist-product-grid"></div>
+                    </div>
+                </section>
+
+                <section id="view-profile" class="app-view hidden">
+                    <div class="profile-header-card">
+                        <div class="avatar-container"><span class="material-icons-round">account_circle</span></div>
+                        <h2 id="profile-display-name">Profile</h2>
+                        <p id="profile-display-email"></p>
+                    </div>
+                    <div class="section-container">
+                        <h3 class="section-title">My Orders</h3>
+                        <div id="order-history-list" class="order-list-wrapper"></div>
+                    </div>
+                </section>
+            </main>
+
+            <nav class="bottom-nav">
+                <button class="nav-item active" data-target="home"><span class="material-icons-round">home</span><span class="label">Home</span></button>
+                <button class="nav-item" data-target="categories"><span class="material-icons-round">dashboard</span><span class="label">Explore</span></button>
+                <button class="nav-item" data-target="cart"><span class="material-icons-round">shopping_bag</span><span class="label">Cart</span><span id="badge-cart-count" class="badge-count hidden">0</span></button>
+                <button class="nav-item" data-target="wishlist"><span class="material-icons-round">favorite_border</span><span class="label">Wishlist</span></button>
+                <button class="nav-item" data-target="profile"><span class="material-icons-round">person</span><span class="label">Account</span></button>
+            </nav>
+        </div>
+
+        <div id="auth-layout" class="auth-wrapper hidden">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>ADIDEV GARMENTS</h1>
+                    <p>Sign in to access your custom storefront profile</p>
+                </div>
+                <div class="auth-tabs">
+                    <button id="tab-login" class="auth-tab active">Sign In</button>
+                    <button id="tab-signup" class="auth-tab">Register</button>
+                </div>
+                <form id="login-form" class="auth-form-body">
+                    <div class="input-group"><label>Email Address</label><input type="email" id="login-email" required></div>
+                    <div class="input-group"><label>Password</label><input type="password" id="login-password" required></div>
+                    <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                </form>
+                <form id="signup-form" class="auth-form-body hidden">
+                    <div class="input-group"><label>Full Name</label><input type="text" id="signup-name" required></div>
+                    <div class="input-group"><label>Email Address</label><input type="email" id="signup-email" required></div>
+                    <div class="input-group"><label>Password</label><input type="password" id="signup-password" minlength="6" required></div>
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                </form>
+                <div class="divider"><span>OR</span></div>
+                <button id="google-signin-btn" class="btn btn-secondary btn-block">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="" class="google-icon">
+                    Sign In with Google
+                </button>
+            </div>
+        </div>
+
+        <div id="admin-layout" class="app-layout hidden">
+            <header class="app-header admin-header">
+                <div class="header-top">
+                    <div>
+                        <span class="admin-badge">ROOT ACCESS OVERRIDE</span>
+                        <h2 class="brand-title">ADIDEV CONTROL</h2>
+                    </div>
+                    <button id="admin-logout-btn" class="icon-btn"><span class="material-icons-round">power_settings_new</span></button>
+                </div>
+            </header>
+            <div class="admin-grid-container">
+                <aside class="admin-sidebar">
+                    <button class="admin-nav-item active" data-target="admin-dash"><span class="material-icons-round">analytics</span> Dashboard</button>
+                    <button class="admin-nav-item" data-target="admin-products"><span class="material-icons-round">inventory_2</span> Products</button>
+                    <button class="admin-nav-item" data-target="admin-orders"><span class="material-icons-round">local_shipping</span> Orders</button>
+                </aside>
+                <main class="admin-main">
+                    <section id="admin-dash" class="admin-view">
+                        <div class="stats-grid">
+                            <div class="stat-card"><h3>Gross Revenue</h3><p id="stat-revenue">$0.00</p></div>
+                            <div class="stat-card"><h3>Registered Users</h3><p id="stat-users">0</p></div>
+                            <div class="stat-card"><h3>Items in Inventory</h3><p id="stat-products">0</p></div>
+                            <div class="stat-card"><h3>Orders Captured</h3><p id="stat-orders">0</p></div>
+                        </div>
+                        <div class="section-container admin-table-container">
+                            <h3>Real-time System Audit (Recent Orders)</h3>
+                            <table class="admin-table">
+                                <thead><tr><th>Order ID</th><th>Target Client</th><th>Amount</th><th>Status</th></tr></thead>
+                                <tbody id="admin-recent-orders-rows"></tbody>
+                            </table>
+                        </div>
+                    </section>
+                    <section id="admin-products" class="admin-view hidden">
+                        <div class="admin-split-layout">
+                            <div class="admin-form-pane">
+                                <h3>Insert / Modify Catalog Entry</h3>
+                                <form id="admin-product-form">
+                                    <input type="hidden" id="edit-prod-id">
+                                    <div class="input-group"><label>Product Name</label><input type="text" id="prod-name" required></div>
+                                    <div class="input-group"><label>Price ($)</label><input type="number" id="prod-price" step="0.01" required></div>
+                                    <div class="input-group">
+                                        <label>Category</label>
+                                        <select id="prod-category" required>
+                                            <option value="Shirts">Shirts</option>
+                                            <option value="Jeans">Jeans</option>
+                                            <option value="Jackets">Jackets</option>
+                                            <option value="Hoodies">Hoodies</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group"><label>Product Image URL</label><input type="url" id="prod-image" required></div>
+                                    <div class="input-group"><label>Functional Description</label><textarea id="prod-desc" required></textarea></div>
+                                    <button type="submit" id="prod-submit-btn" class="btn btn-primary btn-block">Save to Cluster</button>
+                                </form>
+                            </div>
+                            <div class="admin-list-pane">
+                                <h3>Live System Storefront Inventory</h3>
+                                <div id="admin-product-list-container" class="admin-scroll-list"></div>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="admin-orders" class="admin-view hidden">
+                        <div class="section-container admin-table-container">
+                            <h3>Global Order Pipeline Logistics</h3>
+                            <table class="admin-table">
+                                <thead><tr><th>Timestamp ID</th><th>Client Email</th><th>Total Financial Payload</th><th>Logistics Status</th><th>Operations</th></tr></thead>
+                                <tbody id="admin-global-orders-rows"></tbody>
+                            </table>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
